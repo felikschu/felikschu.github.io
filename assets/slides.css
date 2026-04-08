@@ -1,0 +1,137 @@
+@import url("./katex/katex.min.css");
+
+:root {
+  --r-background-color: #f7f5ef;
+  --r-main-color: #181714;
+  --r-heading-color: #111;
+  --r-link-color: #8a4b08;
+  --r-link-color-hover: #6d3b06;
+  --r-selection-background-color: #d6b38a;
+  --r-main-font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --r-heading-font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  background: #f7f5ef;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(247, 245, 239, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #e8e1d1;
+}
+
+.site-header__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #181714;
+  text-decoration: none;
+}
+
+.brand__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #b66c2f, #e6c08f);
+  color: white;
+  font-weight: 700;
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand__text span,
+.site-nav a {
+  color: #6a655c;
+  font-size: 0.95rem;
+}
+
+.site-nav {
+  display: flex;
+  gap: 16px;
+}
+
+.site-nav a {
+  text-decoration: none;
+}
+
+.slides-shell {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 28px 24px 56px;
+}
+
+.slides-intro {
+  max-width: 920px;
+  margin: 0 auto 22px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6a655c;
+  font-size: 0.82rem;
+}
+
+.reveal {
+  font-size: 30px;
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  background: #fffdf8;
+  border: 1px solid #e8e1d1;
+  padding: 48px 60px;
+  height: 100%;
+}
+
+.reveal h1, .reveal h2, .reveal h3 {
+  text-transform: none;
+  letter-spacing: 0;
+  margin-bottom: 0.5em;
+}
+
+.reveal h1 { font-size: 1.9em; }
+.reveal h2 { font-size: 1.45em; }
+.reveal h3 { font-size: 1.1em; }
+
+.reveal p, .reveal li {
+  line-height: 1.6;
+}
+
+.reveal ul, .reveal ol {
+  display: block;
+  margin-left: 1em;
+}
+
+.reveal code {
+  background: #f4efe4;
+  padding: 0.06em 0.2em;
+  border-radius: 4px;
+}
+
+.reveal .katex-display {
+  margin: 0.8em 0;
+}

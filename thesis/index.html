@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Qwen3 Thesis Notes</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+  
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="../index.html">
+        <span class="brand__avatar">FS</span>
+        <span class="brand__text">
+          <strong>felikschu research notes</strong>
+          <span>本科毕业论文工作区与可解释性学习笔记</span>
+        </span>
+      </a>
+      <nav class="site-nav">
+        <a href="../index.html">Home</a>
+        <a href="../about/index.html">About</a>
+        <a href="../thesis/index.html">Thesis</a>
+        <a href="../review/index.html">Review</a>
+      </nav>
+    </div>
+  </header>
+  <main class="page-shell">
+    <article class="simple-page">
+      <p class="eyebrow">thesis</p>
+      <h1>Qwen3-0.6B-Base vs. Qwen3-0.6B：共享骨架下的后训练内部效应研究</h1>
+      <p class="simple-page__lead">这一页对应我的毕业论文主线：在控制架构变量不变的前提下，用一对共享骨架的小模型，研究后训练如何改变大语言模型内部的残差流、注意力模式和 MLP 激活空间。</p>
+
+      <h2>1. 模型背景与定位</h2>
+      <p>Qwen3 是阿里达摩院推出的第三代开源大语言模型系列，覆盖从 0.6B 到 235B 的多个参数规模，同时包含 dense 模型和混合专家模型。在这个系列里，<code>Qwen3-0.6B</code> 是公开可用的最小 dense 模型，参数量约 6 亿，属于非常适合做机制解释实验的“小而完整”的模型。本文选取 <code>Qwen3-0.6B-Base</code> 与 <code>Qwen3-0.6B</code> 作为对比模型对，其中 <code>Base</code> 是只完成预训练的原始版本，更接近一个“续写引擎”；而 <code>Qwen3-0.6B</code> 则是在 Base 之上进一步经过后训练得到的对话优化版本，更接近一个可直接使用的 instruct / chat 模型。</p>
+
+      <p>这对模型最重要的特点，不是它们规模小，而是它们共享完全相同的 Transformer 骨架。参数规模、层数、隐藏维度、注意力头数和网络拓扑都保持不变，差异主要来自后训练阶段引入的权重更新。因此，对 mechanistic interpretability 来说，这是一组非常干净的对照实验：当输入相同而内部激活不同，研究者可以更有把握地把这种变化归因到后训练，而不是归因到架构差异。</p>
+
+      <h2>2. 共享骨架：Dense Qwen3-0.6B 架构</h2>
+      <h3>2.1 宏观结构</h3>
+      <p>Qwen3-0.6B 采用标准的 decoder-only Transformer 架构。整个前向过程可以概括为：输入 token 先经过 embedding，进入一条宽度为 1024 的残差流；随后依次通过 28 层 Transformer block，每一层都由一个注意力子层和一个前馈子层组成；最后经过最终归一化和 language modeling head 映射为输出 logits。对本文来说，最重要的不是记住模块名称，而是明确真正贯穿全网的对象是残差流表示：注意力子层和 MLP 子层都只是在这条残差流上读取、变换、再写回自己的更新量。</p>
+
+      <section class="thesis-inline thesis-inline--skeleton">
+        <div class="skeleton-summary">
+          <span class="mini-chip">shared skeleton</span>
+          <p>Qwen3-0.6B-Base 与 Qwen3-0.6B 共享同一套 dense decoder-only Transformer 骨架。下面这些参数在两个模型之间保持一致，差异主要来自后训练后的权重重排。</p>
+        </div>
+        <div class="shared-grid">
+          <div class="shared-item"><span>层数</span><strong>28</strong></div>
+          <div class="shared-item"><span>隐藏维度</span><strong>1024</strong></div>
+          <div class="shared-item"><span>注意力头</span><strong>16Q / 8KV</strong></div>
+          <div class="shared-item"><span>FFN</span><strong>3072</strong></div>
+          <div class="shared-item"><span>位置编码</span><strong>RoPE</strong></div>
+          <div class="shared-item"><span>归一化</span><strong>RMSNorm + QK-Norm</strong></div>
+        </div>
+      </section>
+
+      <h3>2.2 详细配置</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>参数项</th>
+            <th>取值</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>总参数量</td>
+            <td>约 0.6B</td>
+            <td>dense 模型，无 MoE</td>
+          </tr>
+          <tr>
+            <td>层数</td>
+            <td>28</td>
+            <td>Transformer decoder block 数量</td>
+          </tr>
+          <tr>
+            <td>隐藏层维度</td>
+            <td>1024</td>
+            <td>残差流宽度</td>
+          </tr>
+          <tr>
+            <td>注意力头数</td>
+            <td>16 个 Q 头 / 8 个 KV 头</td>
+            <td>使用 Grouped-Query Attention</td>
+          </tr>
+          <tr>
+            <td>FFN 中间层维度</td>
+            <td>3072</td>
+            <td>SwiGLU 的门控中间维度</td>
+          </tr>
+          <tr>
+            <td>词表大小</td>
+            <td>151,936</td>
+            <td>分词器词表规模</td>
+          </tr>
+          <tr>
+            <td>位置编码</td>
+            <td>RoPE，θ = 1,000,000</td>
+            <td>支持长上下文</td>
+          </tr>
+          <tr>
+            <td>归一化</td>
+            <td>RMSNorm + QK-Norm</td>
+            <td>前归一化，并对 Q/K 额外归一化</td>
+          </tr>
+          <tr>
+            <td>嵌入绑定</td>
+            <td>输入/输出共享</td>
+            <td>减少参数冗余</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>这些参数在 <code>Qwen3-0.6B-Base</code> 和 <code>Qwen3-0.6B</code> 之间保持一致。也就是说，两者在结构层面并没有“Base 是一种模型，Instruct 又是另一种模型”的区别；它们是同一架构的两个训练阶段版本。</p>
+
+      <h3>2.3 单层 Transformer Block 的内部组成</h3>
+      <p>单个 decoder block 可以拆成两个顺序执行的子层。首先，输入残差流经过 RMSNorm，进入注意力子层，完成 Q/K/V 投影、QK-Norm、RoPE 注入和 scaled dot-product attention，再通过输出投影写回残差流。随后，更新后的残差状态再经过一次 RMSNorm，进入 MLP 子层，使用 SwiGLU 结构进行非线性变换，最后再次写回残差流。把它写成最简化的形式，可以概括为</p>
+      <p><code>x → RMSNorm → Attention → 残差相加 → RMSNorm → SwiGLU MLP → 残差相加</code>。</p>
+
+      <section class="thesis-inline thesis-inline--flow">
+        <div class="flow-line">
+          <span class="flow-token">Token IDs</span>
+          <span class="flow-step">Embedding</span>
+          <span class="flow-step">Residual Stream [B, L, 1024]</span>
+          <span class="flow-step">28 Transformer Blocks</span>
+          <span class="flow-step">Final RMSNorm</span>
+          <span class="flow-step flow-step--dark">LM Head → Logits</span>
+        </div>
+
+        <div class="layer-ribbon">
+          <span>1</span>
+          <span>2</span>
+          <span>3</span>
+          <span>…</span>
+          <span class="is-active">14</span>
+          <span>…</span>
+          <span class="is-active">28</span>
+        </div>
+
+        <div class="block-plain">
+          <div class="block-plain__section">
+            <p class="block-plain__label">Attention Sub-layer</p>
+            <p>RMSNorm → Q/K/V projection → QK-Norm → RoPE → scaled dot-product attention → output projection → residual write-back</p>
+          </div>
+          <div class="block-plain__section">
+            <p class="block-plain__label">MLP Sub-layer</p>
+            <p>RMSNorm → SwiGLU → down projection。中间层宽度 3072，最终重新写回 1024 维残差流。</p>
+          </div>
+          <p class="block-plain__note">对机制解释来说，真正贯穿整网的对象是残差流，而不是某个孤立的单点模块。</p>
+        </div>
+      </section>
+
+      <table>
+        <thead>
+          <tr>
+            <th>模块</th>
+            <th>核心机制</th>
+            <th>在 Qwen3-0.6B 中的作用</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RMSNorm</td>
+            <td>只按均方根归一化，不减均值</td>
+            <td>每个子层前执行一次，稳定训练和推理</td>
+          </tr>
+          <tr>
+            <td>QK-Norm</td>
+            <td>对注意力中的 Q、K 向量额外做归一化</td>
+            <td>提高注意力分数稳定性，缓解发散</td>
+          </tr>
+          <tr>
+            <td>GQA</td>
+            <td>多个查询头共享同一组键值头</td>
+            <td>16 个 Q 头共享 8 个 KV 头，降低缓存成本</td>
+          </tr>
+          <tr>
+            <td>RoPE</td>
+            <td>通过旋转 Q、K 注入相对位置信息</td>
+            <td>在不改动主干结构的情况下支持长上下文</td>
+          </tr>
+          <tr>
+            <td>SwiGLU</td>
+            <td><code>SiLU(gate) × up_proj</code> 后再下投影</td>
+            <td>提供比普通 ReLU FFN 更强的门控表达能力</td>
+          </tr>
+          <tr>
+            <td>残差连接</td>
+            <td>每个子层输出都加回原输入</td>
+            <td>形成整网共享的残差流，也是本文主要观测对象</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>3. 从 Base 到 Instruct：后训练路径</h2>
+      <p>Qwen3-0.6B-Base 与 Qwen3-0.6B 的差异不体现在架构，而体现在训练流程。<code>Base</code> 模型完成的是大规模自回归预训练，目标是从海量语料中学习语言建模能力、知识和基础推理模式；而 <code>Qwen3-0.6B</code> 则在此基础上继续经历后训练，一般可以概括为监督微调（SFT）与基于人类偏好的对齐阶段。用最简化的话说，Base 更像“给定前缀继续写下去”的模型，而后训练后的版本更像“理解指令并给出合适回复”的模型。</p>
+
+      <p>因此，两者的区别可以写得非常直接：<code>Qwen3-0.6B-Base</code> 是预训练收敛后的原始权重；<code>Qwen3-0.6B</code> 是在同一底座之上经过后训练得到的新权重。参数矩阵的形状没有变，block 的堆叠顺序没有变，注意力头数和隐藏维度没有变，真正变化的是权重值以及这些权重所诱导出的内部计算路径。</p>
+
+      <section class="thesis-inline thesis-inline--training">
+        <div class="training-lanes">
+          <div class="training-lane">
+            <p class="training-lane__title">Qwen3-0.6B-Base</p>
+            <div class="training-chain">
+              <span>Pretraining</span>
+              <i>→</i>
+              <span>Language Modeling</span>
+            </div>
+            <p>更接近续写引擎，内部表示更偏向语言统计、知识恢复与原始 continuation 行为。</p>
+          </div>
+          <div class="training-lane">
+            <p class="training-lane__title">Qwen3-0.6B</p>
+            <div class="training-chain">
+              <span>Base</span>
+              <i>→</i>
+              <span>SFT</span>
+              <i>→</i>
+              <span>Preference Alignment</span>
+            </div>
+            <p>在相同骨架上形成新的行为路由，更接近 instruct / chat 助手，风格、格式与安全相关的信号更强。</p>
+          </div>
+        </div>
+      </section>
+
+      <table>
+        <thead>
+          <tr>
+            <th>维度</th>
+            <th>Qwen3-0.6B-Base</th>
+            <th>Qwen3-0.6B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>训练阶段</td>
+            <td>仅预训练</td>
+            <td>预训练 + 后训练</td>
+          </tr>
+          <tr>
+            <td>行为模式</td>
+            <td>续写引擎</td>
+            <td>更接近 instruct / chat 助手</td>
+          </tr>
+          <tr>
+            <td>适用场景</td>
+            <td>研究基线、二次微调、原始行为观察</td>
+            <td>直接交互、指令执行、对话任务</td>
+          </tr>
+          <tr>
+            <td>架构与超参数</td>
+            <td>与后者完全相同</td>
+            <td>与前者完全相同</td>
+          </tr>
+          <tr>
+            <td>核心差异来源</td>
+            <td>预训练阶段形成的权重</td>
+            <td>后训练对同一权重空间的进一步重排</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>4. 为什么这对小模型适合做机制解释研究</h2>
+      <p>从 mechanistic interpretability 的角度看，这对模型的价值在于变量非常干净。两者共享完全相同的 Transformer 骨架，因此任何在残差流轨迹、注意力模式、MLP 激活分布上的差异，都可以更直接地理解为后训练效应，而不是架构差异。对于解释研究来说，这种“骨架不变、训练阶段变化”的条件非常难得，因为它让研究问题从“哪个模型更强”收缩成了“同一骨架内部的计算被怎样重排了”。</p>
+
+      <p>同时，0.6B 这一规模也带来了实验上的现实优势。它足够小，可以完整加载、逐层导出激活、反复运行 activation patching，并且允许对多个任务组做 bootstrap / permutation 检验；但它又不是一个纯粹的玩具模型，仍然保留了真正的 LLM 结构和相当完整的行为差异。因此，小模型不是这里的妥协项，而是把研究从概念论证推进到可执行实验的关键条件。</p>
+
+      <h2>5. 这项 thesis 的核心问题</h2>
+      <p>在这个模型对上，本文真正要问的不是“Qwen3-0.6B 和 Base 哪个更强”，而是“后训练把内部计算改到了哪里”。更具体地说，本文关心的是：后训练带来的差异主要集中在早层、中层还是后层；这些差异更像是输出风格和行为路由的变化，还是更深层的语义表示与推理路径重分布；以及这种变化能否在残差流层级上被稳定观测、被 patching 操作因果验证，并在后续用 SAE 或更细粒度工具进一步展开。</p>
+
+      <p>因此，这一页可以收束成一个简洁结论：<code>Qwen3-0.6B-Base</code> 与 <code>Qwen3-0.6B</code> 构成了一组非常适合研究后训练内部效应的小模型对，因为它们共享相同的骨架，而差异主要来自后训练阶段。这使“后训练如何改变模型内部计算”成为一个比“哪个模型更强”更精确、也更有解释力的研究问题。</p>
+    </article>
+  </main>
+</body>
+</html>

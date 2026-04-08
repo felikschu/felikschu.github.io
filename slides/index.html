@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anthropic Interpretability Slides</title>
+  <link rel="stylesheet" href="../assets/slides.css" />
+  <link rel="stylesheet" href="../assets/reveal/reveal.css" />
+    <link rel="stylesheet" href="../assets/reveal/theme/white.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="../index.html">
+        <span class="brand__avatar">FS</span>
+        <span class="brand__text">
+          <strong>felikschu research notes</strong>
+          <span>本科毕业论文工作区与可解释性学习笔记</span>
+        </span>
+      </a>
+      <nav class="site-nav">
+        <a href="../index.html">Home</a>
+        <a href="../about/index.html">About</a>
+        <a href="../thesis/index.html">Thesis</a>
+        <a href="../review/index.html">Review</a>
+      </nav>
+    </div>
+  </header>
+  <main class="slides-shell">
+    <section class="slides-intro">
+      <p class="eyebrow">Presentation</p>
+      <h1>Anthropic Interpretability Slides</h1>
+      <p>适合组会、汇报和答辩预演。整页离线可用，公式已经预渲染。</p>
+    </section>
+  <div class="reveal">
+    <div class="slides">
+      <section><h1>Anthropic 可解释性路线</h1>
+<p>副标题：六篇核心文献如何连成一条研究主线</p>
+<ul>
+<li>数学框架</li>
+<li>superposition</li>
+<li>circuit tracing</li>
+<li>hidden objectives</li>
+<li>persona control</li>
+</ul>
+</section>
+<section><h2>1. 这套路线到底在做什么</h2>
+<p>一句话概括：</p>
+<p><strong>先建立解释 Transformer 的语言，再解释为什么内部概念会纠缠，接着发展 tracing 工具，最后把这些工具用于安全审计与行为控制。</strong></p>
+<p>主线：</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>framework</mtext><mo>→</mo><mtext>superposition</mtext><mo>→</mo><mtext>circuits</mtext><mo>→</mo><mtext>auditing/control</mtext></mrow><annotation encoding="application/x-tex">
+\text{framework} \rightarrow \text{superposition} \rightarrow \text{circuits} \rightarrow \text{auditing/control}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">framework</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8623em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">superposition</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6679em;"></span><span class="mord text"><span class="mord">circuits</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">auditing/control</span></span></span></span></span></span></eqn></section></section>
+<section><h2>2. 第一层：Framework</h2>
+<p>对应论文：</p>
+<ul>
+<li><em>A Mathematical Framework for Transformer Circuits</em></li>
+</ul>
+<p>核心贡献：</p>
+<ul>
+<li>把 residual stream 当成统一通信通道</li>
+<li>把 attention head 分成 QK 和 OV 两部分</li>
+<li>把最终输出拆成若干路径贡献</li>
+</ul>
+<p>公式骨架：</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>r</mi><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">ℓ</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msup><mo>=</mo><msup><mi>r</mi><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">ℓ</mi><mo stretchy="false">)</mo></mrow></msup><mo>+</mo><msup><mi>a</mi><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">ℓ</mi><mo stretchy="false">)</mo></mrow></msup><mo>+</mo><msup><mi>m</mi><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">ℓ</mi><mo stretchy="false">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">
+r^{(\ell+1)} = r^{(\ell)} + a^{(\ell)} + m^{(\ell)}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.938em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">ℓ</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0213em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">ℓ</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0213em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">ℓ</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.938em;"></span><span class="mord"><span class="mord mathnormal">m</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">ℓ</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span></span></eqn></section><section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>z</mi><mo>=</mo><msub><mi>W</mi><mi>U</mi></msub><msup><mi>r</mi><mrow><mo stretchy="false">(</mo><mi>L</mi><mo stretchy="false">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">
+z = W_U r^{(L)}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.088em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.109em;">U</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight">L</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span></span></eqn></section></section>
+<section><h2>3. 第二层：Superposition</h2>
+<p>对应论文：</p>
+<ul>
+<li><em>Toy Models of Superposition</em></li>
+</ul>
+<p>核心问题：</p>
+<p><strong>为什么神经元经常不是一神经元一概念？</strong></p>
+<p>核心答案：</p>
+<ul>
+<li>feature 数量可能大于表示维度</li>
+<li>feature 稀疏时，模型会压缩表示</li>
+<li>压缩的代价是 interference</li>
+</ul>
+<p>概念式：</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>x</mi><mo>≈</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>m</mi></munderover><msub><mi>a</mi><mi>i</mi></msub><msub><mi>v</mi><mi>i</mi></msub><mo separator="true">,</mo><mspace width="1em"/><mi>m</mi><mo>&gt;</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">
+x \approx \sum_{i=1}^m a_i v_i, \quad m &gt; d
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4831em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.9291em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6514em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">m</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span></span></eqn></section></section>
+<section><h2>4. 第三层：Circuit Tracing</h2>
+<p>对应材料：</p>
+<ul>
+<li><em>Open-sourcing circuit tracing tools</em></li>
+<li><em>Tracing the thoughts of a large language model</em></li>
+</ul>
+<p>核心转变：</p>
+<ul>
+<li>不是只找单个 feature</li>
+<li>而是把 feature 连接成 attribution graph</li>
+</ul>
+<p>也就是说，重点从“组件是什么”变成“组件如何流动并形成输出”。</p>
+</section>
+<section><h2>5. Tracing Thoughts 最值得记住的三点</h2>
+<ol>
+<li>模型内部可能真的存在中间概念步骤</li>
+<li>自然语言 chain-of-thought 不一定忠实</li>
+<li>hallucination / refusal 可以看成内部竞争机制</li>
+</ol>
+<p>例子：</p>
+<ul>
+<li>Dallas <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span></eq> Texas <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span></eq> Austin</li>
+</ul>
+<p>如果中间步骤被干预，最终答案也跟着变，说明这不是纯相关。</p>
+</section>
+<section><h2>6. 第四层：Hidden Objectives</h2>
+<p>对应论文：</p>
+<ul>
+<li><em>Auditing language models for hidden objectives</em></li>
+</ul>
+<p>核心问题：</p>
+<p><strong>如果模型表面行为正常，但内部在追求错误目标，我们能不能审计出来？</strong></p>
+<p>概念式：</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>π</mi><mstyle mathcolor="#cc0000"><mtext>\*</mtext></mstyle></msup><mo>=</mo><mi>arg</mi><mo>⁡</mo><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>π</mi></munder><mi mathvariant="double-struck">E</mi><mo stretchy="false">[</mo><msub><mi>r</mi><mtext>RM</mtext></msub><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>π</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">
+\pi^\* = \arg\max_\pi \mathbb{E}[r_{\text{RM}}(x, \pi(x))]
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.938em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">π</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight" style="color:#cc0000;"><span class="mord mtight" style="color:#cc0000;">\*</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.45em;vertical-align:-0.7em;"></span><span class="mop">ar<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.4em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">π</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathbb">E</span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">RM</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">π</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">))]</span></span></span></span></span></eqn></section><p>问题在于：</p>
+<ul>
+<li>最大化 reward-model 分数</li>
+<li>不等于真正遵循人类意图</li>
+</ul>
+</section>
+<section><h2>7. 第五层：Persona Vectors</h2>
+<p>对应论文：</p>
+<ul>
+<li><em>Persona vectors</em></li>
+</ul>
+<p>核心对象：</p>
+<p><strong>行为与人格方向也可以表示成内部向量。</strong></p>
+<p>定义式：</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>v</mi><mtext>trait</mtext></msub><mo>=</mo><mi mathvariant="double-struck">E</mi><mo stretchy="false">[</mo><mi>h</mi><mo>∣</mo><mtext>trait on</mtext><mo stretchy="false">]</mo><mo>−</mo><mi mathvariant="double-struck">E</mi><mo stretchy="false">[</mo><mi>h</mi><mo>∣</mo><mtext>trait off</mtext><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">
+v_{\text{trait}} = \mathbb{E}[h \mid \text{trait on}] - \mathbb{E}[h \mid \text{trait off}]
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">trait</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbb">E</span><span class="mopen">[</span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">trait on</span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbb">E</span><span class="mopen">[</span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">trait off</span></span><span class="mclose">]</span></span></span></span></span></eqn></section><p>用途：</p>
+<ul>
+<li>监控人格漂移</li>
+<li>steering</li>
+<li>训练数据风险识别</li>
+</ul>
+</section>
+<section><h2>8. 六篇连起来后的完整路线</h2>
+<ol>
+<li>Transformer 可以被路径化地分析</li>
+<li>但表示往往不是 neuron-aligned，而是 feature-in-superposition</li>
+<li>所以需要 feature / graph / tracing 工具</li>
+<li>最终这些工具要服务于审计、控制和 alignment</li>
+</ol>
+<p>这条路线不是“看懂模型有多酷”，而是：</p>
+<p><strong>把内部解释变成可干预、可审计、可工程化的能力。</strong></p>
+</section>
+<section><h2>9. 和我的 thesis 的关系</h2>
+<p>我的 thesis 关注：</p>
+<ul>
+<li><code>Qwen3-0.6B-Base</code> vs <code>Qwen3-0.6B</code></li>
+<li>controlled next-token tasks</li>
+<li>cross-model activation patching</li>
+<li>少量 SAE follow-up</li>
+</ul>
+<p>最相关的启发是：</p>
+<p><strong>后训练不一定体现为统一涨分，更可能体现为内部路径、方向和默认行为电路的重分配。</strong></p>
+</section>
+<section><h2>10. 展示建议</h2>
+<ul>
+<li>组会：优先用这套 Slides</li>
+<li>深入阅读：用长文 HTML 版</li>
+<li>兜底：导出 PDF</li>
+</ul>
+</section>
+    </div>
+  </div>
+  </main>
+  <script src="../assets/reveal/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      width: 1400,
+      height: 850,
+      margin: 0.04,
+      controls: true,
+      progress: true,
+      center: false,
+      transition: 'slide'
+    });
+  </script>
+</body>
+</html>

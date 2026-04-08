@@ -120,38 +120,39 @@
       <p>单个 decoder block 可以拆成两个顺序执行的子层。首先，输入残差流经过 RMSNorm，进入注意力子层，完成 Q/K/V 投影、QK-Norm、RoPE 注入和 scaled dot-product attention，再通过输出投影写回残差流。随后，更新后的残差状态再经过一次 RMSNorm，进入 MLP 子层，使用 SwiGLU 结构进行非线性变换，最后再次写回残差流。把它写成最简化的形式，可以概括为</p>
       <p><code>x → RMSNorm → Attention → 残差相加 → RMSNorm → SwiGLU MLP → 残差相加</code>。</p>
 
-      <section class="thesis-inline thesis-inline--flow">
-        <div class="flow-line">
-          <span class="flow-token">Token IDs</span>
-          <span class="flow-step">Embedding</span>
-          <span class="flow-step">Residual Stream [B, L, 1024]</span>
-          <span class="flow-step">28 Transformer Blocks</span>
-          <span class="flow-step">Final RMSNorm</span>
-          <span class="flow-step flow-step--dark">LM Head → Logits</span>
+      <div class="diagram-stack">
+        <div class="diagram-flow">
+          <div class="flow-node">Input <em>x</em></div>
+          <div class="flow-arrow" aria-hidden="true"></div>
+          <div class="flow-node flow-node--subtle">RMSNorm</div>
+          <div class="flow-arrow" aria-hidden="true"></div>
+          <div class="flow-node flow-node--accent">Attention Sub-layer</div>
+          <div class="flow-arrow" aria-hidden="true"></div>
+          <div class="flow-node flow-node--merge">Residual Add</div>
+          <div class="flow-arrow" aria-hidden="true"></div>
+          <div class="flow-node flow-node--subtle">RMSNorm</div>
+          <div class="flow-arrow" aria-hidden="true"></div>
+          <div class="flow-node flow-node--accent">SwiGLU MLP Sub-layer</div>
+          <div class="flow-arrow" aria-hidden="true"></div>
+          <div class="flow-node flow-node--merge">Residual Add</div>
+          <div class="flow-arrow" aria-hidden="true"></div>
+          <div class="flow-node">Output <em>x′</em></div>
         </div>
+        <p class="diagram-caption">单个 decoder block 的前向路径：所有子层都是对 1024 维残差流的读写操作。</p>
+      </div>
 
-        <div class="layer-ribbon">
-          <span>1</span>
-          <span>2</span>
-          <span>3</span>
-          <span>…</span>
-          <span class="is-active">14</span>
-          <span>…</span>
-          <span class="is-active">28</span>
+      <div class="diagram-layers">
+        <div class="layer-track">
+          <span class="layer-pill">1</span>
+          <span class="layer-pill">2</span>
+          <span class="layer-pill">3</span>
+          <span class="layer-pill layer-pill--dot">⋯</span>
+          <span class="layer-pill layer-pill--active">14</span>
+          <span class="layer-pill layer-pill--dot">⋯</span>
+          <span class="layer-pill layer-pill--active">28</span>
         </div>
-
-        <div class="block-plain">
-          <div class="block-plain__section">
-            <p class="block-plain__label">Attention Sub-layer</p>
-            <p>RMSNorm → Q/K/V projection → QK-Norm → RoPE → scaled dot-product attention → output projection → residual write-back</p>
-          </div>
-          <div class="block-plain__section">
-            <p class="block-plain__label">MLP Sub-layer</p>
-            <p>RMSNorm → SwiGLU → down projection。中间层宽度 3072，最终重新写回 1024 维残差流。</p>
-          </div>
-          <p class="block-plain__note">对机制解释来说，真正贯穿整网的对象是残差流，而不是某个孤立的单点模块。</p>
-        </div>
-      </section>
+        <p class="diagram-caption">共 28 层堆叠。中间层（如 14）与末层（28）常被选作激活观测点。</p>
+      </div>
 
       <table>
         <thead>
@@ -200,30 +201,57 @@
 
       <p>因此，两者的区别可以写得非常直接：<code>Qwen3-0.6B-Base</code> 是预训练收敛后的原始权重；<code>Qwen3-0.6B</code> 是在同一底座之上经过后训练得到的新权重。参数矩阵的形状没有变，block 的堆叠顺序没有变，注意力头数和隐藏维度没有变，真正变化的是权重值以及这些权重所诱导出的内部计算路径。</p>
 
-      <section class="thesis-inline thesis-inline--training">
-        <div class="training-lanes">
-          <div class="training-lane">
-            <p class="training-lane__title">Qwen3-0.6B-Base</p>
-            <div class="training-chain">
-              <span>Pretraining</span>
-              <i>→</i>
-              <span>Language Modeling</span>
-            </div>
-            <p>更接近续写引擎，内部表示更偏向语言统计、知识恢复与原始 continuation 行为。</p>
+      <div class="diagram-training">
+        <div class="training-track">
+          <div class="training-stage">
+            <span class="stage-dot stage-dot--base"></span>
+            <div class="stage-label">Pretraining</div>
+            <div class="stage-desc">大规模自回归预训练</div>
           </div>
-          <div class="training-lane">
-            <p class="training-lane__title">Qwen3-0.6B</p>
-            <div class="training-chain">
-              <span>Base</span>
-              <i>→</i>
-              <span>SFT</span>
-              <i>→</i>
-              <span>Preference Alignment</span>
-            </div>
-            <p>在相同骨架上形成新的行为路由，更接近 instruct / chat 助手，风格、格式与安全相关的信号更强。</p>
+          <div class="training-connector" aria-hidden="true"></div>
+          <div class="training-stage">
+            <span class="stage-dot stage-dot--base"></span>
+            <div class="stage-label">Language Modeling</div>
+            <div class="stage-desc">续写引擎</div>
+          </div>
+          <div class="training-arrow" aria-hidden="true">→</div>
+          <div class="training-stage training-stage--highlight">
+            <span class="stage-dot stage-dot--base"></span>
+            <div class="stage-label">Base</div>
+            <div class="stage-desc">原始权重</div>
           </div>
         </div>
-      </section>
+
+        <div class="training-track training-track--instruct">
+          <div class="training-stage training-stage--ghost">
+            <span class="stage-dot stage-dot--base"></span>
+            <div class="stage-label">Base</div>
+            <div class="stage-desc">同左</div>
+          </div>
+          <div class="training-connector training-connector--dashed" aria-hidden="true"></div>
+          <div class="training-stage">
+            <span class="stage-dot stage-dot--sft"></span>
+            <div class="stage-label">SFT</div>
+            <div class="stage-desc">监督微调</div>
+          </div>
+          <div class="training-arrow" aria-hidden="true">→</div>
+          <div class="training-stage">
+            <span class="stage-dot stage-dot--align"></span>
+            <div class="stage-label">Preference Alignment</div>
+            <div class="stage-desc">人类偏好对齐</div>
+          </div>
+          <div class="training-arrow" aria-hidden="true">→</div>
+          <div class="training-stage training-stage--highlight">
+            <span class="stage-dot stage-dot--final"></span>
+            <div class="stage-label">Instruct</div>
+            <div class="stage-desc">对话优化版本</div>
+          </div>
+        </div>
+
+        <div class="training-note">
+          <p><strong>Base</strong> 是预训练收敛后的原始权重；<strong>Instruct</strong> 是在同一底座上继续经过后训练得到的新权重。架构不变，变化的是权重值与内部计算路径。</p>
+        </div>
+      </div>
 
       <table>
         <thead>

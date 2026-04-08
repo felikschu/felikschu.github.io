@@ -770,13 +770,6 @@ hr { border: none; border-top: 1px solid var(--line); margin: 2.5rem 0; }
   border-bottom: 1px solid var(--line);
 }
 
-.thesis-inline {
-  margin: 1.1rem 0 1.6rem;
-  padding: 1rem 0 0.3rem;
-  border-top: 1px solid #ece7df;
-  border-bottom: 1px solid #f1ece5;
-}
-
 .mini-chip {
   display: inline-block;
   color: #8b6b52;
@@ -822,128 +815,218 @@ hr { border: none; border-top: 1px solid var(--line); margin: 2.5rem 0; }
   text-align: right;
 }
 
-.flow-line {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  align-items: center;
-  margin-bottom: 0.85rem;
-  color: #655f58;
-  font-size: 0.84rem;
-  line-height: 1.6;
+/* Elegant diagrams for thesis page */
+.diagram-stack,
+.diagram-layers,
+.diagram-training {
+  margin: 1.4rem 0 1.8rem;
 }
 
-.flow-line > span {
-  font-weight: 600;
-}
-
-.flow-line > span:not(:last-child)::after {
-  content: "→";
-  margin-left: 0.5rem;
-  color: #b0a79a;
-}
-
-.flow-token {
-  color: #7b5d46 !important;
-}
-
-.flow-step--dark {
-  color: #4f4a43 !important;
-}
-
-.layer-ribbon {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 0.38rem;
-  margin: 0.65rem 0 1rem;
-}
-
-.layer-ribbon span {
-  min-width: 34px;
-  padding: 0.16rem 0.2rem 0.22rem;
-  color: #5d564d;
-  font-size: 0.76rem;
-  font-weight: 650;
-  text-align: center;
-  border-bottom: 1px solid transparent;
-}
-
-.layer-ribbon .is-active {
-  color: #7a5437;
-  border-bottom-color: #d9c3a7;
-}
-
-.block-plain {
-  display: grid;
-  gap: 0.85rem;
-  margin-top: 0.2rem;
-}
-
-.block-plain__section {
-  padding-left: 0.95rem;
-  border-left: 1px solid #e7ddd0;
-}
-
-.block-plain__label {
-  margin: 0 0 0.18rem;
-  color: var(--ink);
-  font-size: 0.84rem;
-  font-weight: 650;
-}
-
-.block-plain__section p:last-child,
-.block-plain__note {
-  margin: 0;
+.diagram-caption {
+  margin: 0.8rem 0 0;
   color: var(--muted);
-  font-size: 0.86rem;
-  line-height: 1.62;
+  font-size: 0.92rem;
+  text-align: center;
 }
 
-.block-plain__note {
-  padding-top: 0.2rem;
+/* Vertical flow diagram */
+.diagram-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
 }
 
-.training-lanes {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.training-lane {
-  padding: 0.35rem 0 0.2rem;
-  border-top: 1px solid #ece7df;
-}
-
-.training-lane__title {
-  margin: 0 0 0.55rem;
+.flow-node {
+  min-width: 180px;
+  max-width: 320px;
+  text-align: center;
+  padding: 0.7rem 1.2rem;
+  background: #fdfbf7;
+  border: 1px solid #e8e6dc;
+  border-radius: 8px;
   color: var(--ink);
   font-size: 0.95rem;
-  font-weight: 650;
+  font-weight: 500;
 }
 
-.training-chain {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.42rem;
-  align-items: center;
-  margin-bottom: 0.65rem;
-  color: #665f56;
-  font-size: 0.82rem;
-}
-
-.training-chain span {
+.flow-node em {
+  font-style: normal;
+  color: var(--accent);
   font-weight: 600;
 }
 
-.training-chain i {
-  color: #b2a797;
-  font-style: normal;
+.flow-node--subtle {
+  background: #f7f5f0;
+  color: var(--ink-secondary);
+  font-size: 0.9rem;
 }
 
-.training-lane p:last-child {
-  margin: 0;
+.flow-node--accent {
+  background: #faf6ea;
+  border-color: #e5dcc9;
+  color: #5b5347;
+}
+
+.flow-node--merge {
+  background: transparent;
+  border: 1px dashed #d9d3c5;
   color: var(--muted);
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+}
+
+.flow-arrow {
+  width: 1px;
+  height: 18px;
+  background: linear-gradient(to bottom, #dcd6c8, #c9c3b5);
+  position: relative;
+}
+
+.flow-arrow::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #c9c3b5;
+}
+
+/* Layer ribbon */
+.diagram-layers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.layer-track {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: #f7f5f0;
+  border-radius: 999px;
+}
+
+.layer-pill {
+  min-width: 36px;
+  text-align: center;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: #fdfbf7;
+  border: 1px solid #e8e6dc;
+  border-radius: 999px;
+}
+
+.layer-pill--dot {
+  background: transparent;
+  border-color: transparent;
+  color: var(--cloud);
+}
+
+.layer-pill--active {
+  background: #f3e9e1;
+  border-color: #e5d6c4;
+  color: #7a5437;
+}
+
+/* Training diagram */
+.diagram-training {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.training-track {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 1rem 1.2rem;
+  background: #f7f5f0;
+  border-radius: 12px;
+}
+
+.training-track--instruct {
+  background: #fdfbf7;
+  border: 1px solid #e8e6dc;
+}
+
+.training-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+
+.training-stage--ghost {
+  opacity: 0.55;
+}
+
+.training-stage--highlight {
+  padding: 0.45rem 0.8rem;
+  background: #fff;
+  border: 1px solid #e0d8c8;
+  border-radius: 8px;
+}
+
+.stage-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.stage-dot--base { background: #b0a79a; }
+.stage-dot--sft { background: #c9a87c; }
+.stage-dot--align { background: #9e4e2c; }
+.stage-dot--final { background: #7a5437; }
+
+.stage-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.stage-desc {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.training-connector {
+  flex: 1 1 auto;
+  height: 1px;
+  min-width: 28px;
+  background: linear-gradient(to right, #dcd6c8, #c9c3b5);
+}
+
+.training-connector--dashed {
+  background: repeating-linear-gradient(to right, #dcd6c8 0, #dcd6c8 6px, transparent 6px, transparent 10px);
+}
+
+.training-arrow {
+  color: #b0a79a;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.training-note {
+  padding: 0.9rem 1.1rem;
+  background: #faf6ea;
+  border-left: 3px solid #e5dcc9;
+  border-radius: 0 10px 10px 0;
+  color: var(--ink-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.training-note p {
+  margin: 0;
 }
 
 .lang-divider {

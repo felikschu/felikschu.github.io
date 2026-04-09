@@ -600,7 +600,7 @@ h&#x27; = h + \alpha v_{\mathrm{trait}}.
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8019em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8019em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">trait</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">.</span></span></span></span></span></eqn></section><p>这里 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span></span></span></span></eq> 控制干预强度。若 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\alpha &gt; 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></eq>，表示沿 trait 方向增强；若 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\alpha &lt; 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></eq>，表示沿反方向削弱。这个式子本身很短，但它背后的含义很重要：行为倾向从一个只在输出上观察到的统计现象，变成了一个可监控、可干预的内部对象。</p>
 <p>这类工作之所以重要，是因为它把 interpretability 从“解释模型如何处理事实”继续推进到了“解释模型如何呈现人格和行为风格”。前面的 hidden objectives 更偏安全和目标层面，而 persona vectors 更偏风格和角色层面。两者合起来，可以看到 Anthropic 这条路线的研究对象正在逐步上移：从神经元、特征、路径，一直推进到人格、偏好和内部目标。</p>
 <p>这里同样不能把结论写得过强。persona vector 并不自动证明“人格真的以线性方式存储在模型里”。更稳妥的理解是：在当前实验条件下，某些行为倾向可以被一个线性方向相当好地近似，从而支持监控与干预。这更像一种有效的工作近似，而不是一个已经被严格证明的本体论结论。</p>
-<h2 id="section-9">Model diffing 与 base / instruct 比较</h2><div class="section-sources"><span class="section-sources__label">Primary source</span><div class="section-sources__list"><a class="section-source" href="#ref-9" title="Insights on Crosscoder Model Diffing">[9] Insights on Crosscoder Model Diffing</a><a class="section-source" href="#ref-10" title="A “diff” tool for AI: Finding behavioral differences in new models">[10] A “diff” tool for AI: Finding behavioral differences in new models</a></div></div>
+<h2 id="section-9">Model diffing 与 base / instruct 比较</h2><div class="section-sources"><span class="section-sources__label">Primary source</span><div class="section-sources__list"><a class="section-source" href="#ref-9" title="Insights on Crosscoder Model Diffing">[9] Insights on Crosscoder Model Diffing</a></div></div>
 <p>这一部分对应的核心来源是 <em>Insights on Crosscoder Model Diffing</em>，更早的方法背景可以追到 <em>Sparse Crosscoders for Cross-Layer Features and Model Diffing</em>。 这一节要处理的问题是：当两个模型骨架相同、训练历史不同，内部表征究竟是沿着同一套特征继续演化，还是已经在特征空间里分开了。</p>
 <p>直接做逐神经元比较会立刻碰到参照系问题。设两个模型在同一层、同一 token 位置上的激活分别为</p>
 <section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>h</mi><mi>A</mi></msup><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><msub><mi>d</mi><mi>A</mi></msub></msup><mo separator="true">,</mo><mspace width="2em"/><msup><mi>h</mi><mi>B</mi></msup><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><msub><mi>d</mi><mi>B</mi></msub></msup><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">
@@ -701,9 +701,8 @@ z_j\bigl(\|d_j^A\|+\|d_j^B\|\bigr).
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">sparse</span></span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∝</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2744em;vertical-align:-0.3831em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mopen"><span class="delimsizing size1">(</span></span><span class="mord">∥</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">A</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3831em;"><span></span></span></span></span></span></span><span class="mord">∥</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2744em;vertical-align:-0.3831em;"></span><span class="mord">∥</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0502em;">B</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3831em;"><span></span></span></span></span></span></span><span class="mord">∥</span><span class="mclose"><span class="delimsizing size1">)</span></span><span class="mord">.</span></span></span></span></span></eqn></section><p>若一个 latent 同时给两个模型写入，就要同时承担两半的代价；若它只给模型 A 写入，则只承担 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∥</mi><msubsup><mi>d</mi><mi>j</mi><mi>A</mi></msubsup><mi mathvariant="normal">∥</mi></mrow><annotation encoding="application/x-tex">\|d_j^A\|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2361em;vertical-align:-0.3948em;"></span><span class="mord">∥</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.4413em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">A</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3948em;"><span></span></span></span></span></span></span><span class="mord">∥</span></span></span></span></eq> 这一半。 这正是 unique feature 会大量出现的原因之一。论文也讨论了对应的修正方式：给 designated shared features 更低的稀疏惩罚，让共享结构不必和 unique structure 抢同一份预算。</p>
 <p>这一节里还有一个容易被忽略的事实：真正难解释的通常不是 shared feature，而是 unique feature。原因并不复杂。shared feature 同时降低两个模型的重构误差，收益高；exclusive feature 只降低一边的误差，收益低。预算固定时，优化过程会先把最干净、最稳定的 shared feature 学出来。能留下来的 unique feature，往往都要承担更复杂的信息，于是激活得更频繁，解释起来也更难。</p>
 <p>把这套方法放到 <code>Qwen3-0.6B-Base</code> 和 <code>Qwen3-0.6B</code> 上，就能得到比行为测试更细的内部结构。若两个模型在同一个 prompt、同一个层位置上产生激活 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>h</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow></msup></mrow><annotation encoding="application/x-tex">h^{\mathrm{base}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">base</span></span></span></span></span></span></span></span></span></span></span></span></span></eq> 和 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>h</mi><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">h^{\mathrm{inst}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8305em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8305em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">inst</span></span></span></span></span></span></span></span></span></span></span></span></span></eq>，crosscoder 训练完成后，大致会出现三类 latent。第一类是 shared feature：两边解码向量范数接近，方向也相近，常见于共同的语言知识、句法结构、基础推理部件。第二类是 refined feature：两边都存在明显解码向量，但范数比例或方向已经发生偏移，这意味着后训练保留了原有特征，同时修改了它在内部计算中的权重或写回方式。第三类是 unique feature：一边的解码向量明显，另一边很弱，常见于助手语气、拒答模板、角色设定、工具调用格式，或者相反地，保留在 base 模型中的原始续写倾向。</p>
-<p>这里还要把 crosscoder 和 <em>A “diff” tool for AI</em> 分开。diff tool 负责找到行为上真正分化的 prompt；crosscoder 负责进入这些 prompt 对应的内部激活，检查差异究竟落在哪些 latent 上。 把两者合起来看，后训练带来的变化就不再只是“输出风格变了”，而是“哪些 feature 被保留、哪些 feature 被重排、哪些 feature 被新引入”。</p>
 <p>对你的 thesis 来说，这一节给出的不是一个抽象观点，而是一套可直接套用的比较方法。问题不必再写成“base 和 instruct 谁更强”，也不必停在“某一层均值差异是否更大”。更适合写成：哪些 shared feature 在后训练后仍然稳定，哪些 refined feature 发生了方向偏移，哪些 unique feature 和助手行为一起出现，哪些行为差异能够被追到一组具体 latent 上。</p>
-<h2 id="section-10">对后训练内部效应研究的启发</h2><div class="section-sources"><span class="section-sources__label">Primary source</span><div class="section-sources__list"><a class="section-source" href="#ref-1" title="A Mathematical Framework for Transformer Circuits">[1] A Mathematical Framework for Transformer Circuits</a><a class="section-source" href="#ref-2" title="Toy Models of Superposition">[2] Toy Models of Superposition</a><a class="section-source" href="#ref-3" title="Towards Monosemanticity: Decomposing Language Models With Dictionary Learning">[3] Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</a><a class="section-source" href="#ref-6" title="On the Biology of a Large Language Model">[6] On the Biology of a Large Language Model</a><a class="section-source" href="#ref-7" title="Auditing language models for hidden objectives">[7] Auditing language models for hidden objectives</a><a class="section-source" href="#ref-8" title="Persona vectors: Monitoring and controlling character traits in language models">[8] Persona vectors: Monitoring and controlling character traits in language models</a><a class="section-source" href="#ref-9" title="Insights on Crosscoder Model Diffing">[9] Insights on Crosscoder Model Diffing</a><a class="section-source" href="#ref-10" title="A “diff” tool for AI: Finding behavioral differences in new models">[10] A “diff” tool for AI: Finding behavioral differences in new models</a></div></div>
+<h2 id="section-10">对后训练内部效应研究的启发</h2><div class="section-sources"><span class="section-sources__label">Primary source</span><div class="section-sources__list"><a class="section-source" href="#ref-1" title="A Mathematical Framework for Transformer Circuits">[1] A Mathematical Framework for Transformer Circuits</a><a class="section-source" href="#ref-2" title="Toy Models of Superposition">[2] Toy Models of Superposition</a><a class="section-source" href="#ref-3" title="Towards Monosemanticity: Decomposing Language Models With Dictionary Learning">[3] Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</a><a class="section-source" href="#ref-6" title="On the Biology of a Large Language Model">[6] On the Biology of a Large Language Model</a><a class="section-source" href="#ref-7" title="Auditing language models for hidden objectives">[7] Auditing language models for hidden objectives</a><a class="section-source" href="#ref-8" title="Persona vectors: Monitoring and controlling character traits in language models">[8] Persona vectors: Monitoring and controlling character traits in language models</a><a class="section-source" href="#ref-9" title="Insights on Crosscoder Model Diffing">[9] Insights on Crosscoder Model Diffing</a></div></div>
 <p>沿着这条文献链往回看，后训练效应最自然的理解方式，已经不再是“某个总分涨了多少”，而是“内部机制发生了怎样的重分布”。 Framework 提供了路径语言，Toy Models 和 SAE 把解释对象从神经元推进到特征方向，tracing 说明复杂行为依赖跨层路径，auditing 与 persona vectors 则把研究对象推到目标和行为层。 一旦站在这个视角上，共享底座模型的比较问题就会自然收敛到几类具体问题：哪些路径承担了更大的贡献，哪些行为方向被放大或压制，哪些特征只在后训练模型里稳定出现，哪些内部对象在训练后被重新组织了。</p>
 <p>从这个角度看，受控 next-token 指标仍然有很高的研究价值。它不是通用能力排名，但它提供了一个局部、稳定、可干预的行为读出端，能够和 patching、path analysis、feature intervention 直接接起来。 如果研究继续往特征层推进，更稳妥的路径通常是先用 patching 和统计方法定位差异层，再引入 crosscoder 风格的工具，去判断这些差异更像路径重排、行为方向变化，还是特征字典本身发生了变化。</p>
 <h2 id="section-11">术语查阅表</h2>
@@ -1135,18 +1134,14 @@ h&#x27; = h + \alpha v_{\mathrm{trait}}
       <span class="ref-links"><a class="ref-backlink" href="#cite-9-1" title="返回正文引用 1">↩1</a> <a class="ref-backlink" href="#cite-9-2" title="返回正文引用 2">↩2</a> <a class="ref-backlink" href="#cite-9-3" title="返回正文引用 3">↩3</a> <a class="ref-backlink" href="#cite-9-4" title="返回正文引用 4">↩4</a> <a class="ref-backlink" href="#cite-9-5" title="返回正文引用 5">↩5</a> <a class="ref-backlink" href="#cite-9-6" title="返回正文引用 6">↩6</a> <a class="ref-backlink" href="#cite-9-7" title="返回正文引用 7">↩7</a></span>
     </li><li id="ref-10">
       <span class="ref-label">[10]</span>
-      <span class="ref-body"><strong>Anthropic</strong>. <em>A “diff” tool for AI: Finding behavioral differences in new models</em>. <a href="https://www.anthropic.com/research/diff-tool" target="_blank" rel="noreferrer">Anthropic Research, 2026</a>.</span>
+      <span class="ref-body"><strong>Anthropic</strong>. <em>The assistant axis: situating and stabilizing the character of large language models</em>. <a href="https://www.anthropic.com/research/assistant-axis" target="_blank" rel="noreferrer">Anthropic Research, 2026</a>.</span>
       <span class="ref-links"></span>
     </li><li id="ref-11">
       <span class="ref-label">[11]</span>
-      <span class="ref-body"><strong>Anthropic</strong>. <em>The assistant axis: situating and stabilizing the character of large language models</em>. <a href="https://www.anthropic.com/research/assistant-axis" target="_blank" rel="noreferrer">Anthropic Research, 2026</a>.</span>
+      <span class="ref-body"><strong>Anthropic</strong>. <em>Evaluating feature steering: A case study in mitigating social biases</em>. <a href="https://www.anthropic.com/research/evaluating-feature-steering" target="_blank" rel="noreferrer">Anthropic Research, 2024</a>.</span>
       <span class="ref-links"></span>
     </li><li id="ref-12">
       <span class="ref-label">[12]</span>
-      <span class="ref-body"><strong>Anthropic</strong>. <em>Evaluating feature steering: A case study in mitigating social biases</em>. <a href="https://www.anthropic.com/research/evaluating-feature-steering" target="_blank" rel="noreferrer">Anthropic Research, 2024</a>.</span>
-      <span class="ref-links"></span>
-    </li><li id="ref-13">
-      <span class="ref-label">[13]</span>
       <span class="ref-body"><strong>Anthropic</strong>. <em>Emotion concepts and their function in a large language model</em>. <a href="https://www.anthropic.com/research/emotion-concepts-function" target="_blank" rel="noreferrer">Anthropic Research, 2026</a>.</span>
       <span class="ref-links"></span>
     </li></ol>
@@ -1214,6 +1209,118 @@ h&#x27; = h + \alpha v_{\mathrm{trait}}
       document.addEventListener('keydown', function(event){
         if(event.key === 'Escape'){
           closeAll(null);
+        }
+      });
+    })();
+    (function(){
+      var article = document.querySelector('.longform-article');
+      if(!article) return;
+      var glossaryHeading = Array.prototype.find.call(article.querySelectorAll('h2'), function(node){
+        return node.textContent.trim() === '术语查阅表';
+      });
+      if(!glossaryHeading) return;
+
+      function collectGlossaryTerms(start){
+        var section = [];
+        var node = start.nextElementSibling;
+        while(node){
+          if(node.tagName === 'H2') break;
+          if(node.tagName === 'H4'){
+            section.push(node);
+          }
+          node = node.nextElementSibling;
+        }
+        return section;
+      }
+
+      function normalizeAlias(text){
+        return text
+          .replace(/（[^）]*）/g, '')
+          .replace(/([^)]*)/g, '')
+          .replace(/s+/g, ' ')
+          .trim();
+      }
+
+      function aliasesFromTitle(title){
+        var aliases = new Set();
+        aliases.add(title.trim());
+        var slashParts = title.split(/[\/／]/).map(function(part){ return part.trim(); }).filter(Boolean);
+        slashParts.forEach(function(part){ aliases.add(part); });
+        var noParen = normalizeAlias(title);
+        if(noParen) aliases.add(noParen);
+        noParen.split(',').map(function(part){ return part.trim(); }).filter(Boolean).forEach(function(part){ aliases.add(part); });
+        Array.from(aliases).forEach(function(item){
+          var clean = normalizeAlias(item);
+          if(clean) aliases.add(clean);
+        });
+        return Array.from(aliases).filter(Boolean).sort(function(a,b){ return b.length - a.length; });
+      }
+
+      function shouldSkipTextNode(node){
+        if(!node.parentElement) return true;
+        if(glossaryHeading.compareDocumentPosition(node.parentElement) & Node.DOCUMENT_POSITION_FOLLOWING) return true;
+        var tag = node.parentElement.tagName;
+        if(['A','CODE','PRE','SCRIPT','STYLE','H1','H2','H3','H4'].indexOf(tag) >= 0) return true;
+        if(node.parentElement.closest('.references-block,.section-sources,.cite,.katex,.toc-card')) return true;
+        return false;
+      }
+
+      function findAndWrapFirst(alias, targetId, refId){
+        var walker = document.createTreeWalker(article, NodeFilter.SHOW_TEXT, {
+          acceptNode: function(node){
+            if(shouldSkipTextNode(node)) return NodeFilter.FILTER_REJECT;
+            if(!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        });
+        while(walker.nextNode()){
+          var node = walker.currentNode;
+          var text = node.nodeValue;
+          var index = -1;
+          if(/^[A-Za-z][A-Za-z0-9 .\-]*$/.test(alias)){
+            var regex = new RegExp('\\b' + alias.replace(/[.*+?^$()|[\]\\]/g, '\\$&') + '\\b', 'i');
+            var match = regex.exec(text);
+            if(match) index = match.index;
+          }else{
+            index = text.indexOf(alias);
+          }
+          if(index < 0) continue;
+          var matched = text.slice(index, index + alias.length);
+          var before = text.slice(0, index);
+          var after = text.slice(index + alias.length);
+          var frag = document.createDocumentFragment();
+          if(before) frag.appendChild(document.createTextNode(before));
+          var link = document.createElement('a');
+          link.className = 'glossary-term-link';
+          link.href = '#' + targetId;
+          link.id = refId;
+          link.textContent = matched;
+          link.setAttribute('title', '跳转到术语查阅表');
+          frag.appendChild(link);
+          if(after) frag.appendChild(document.createTextNode(after));
+          node.parentNode.replaceChild(frag, node);
+          return true;
+        }
+        return false;
+      }
+
+      var glossaryTerms = collectGlossaryTerms(glossaryHeading);
+      glossaryTerms.forEach(function(termNode, idx){
+        var title = termNode.textContent.trim();
+        var targetId = 'glossary-term-' + (idx + 1);
+        termNode.id = targetId;
+        var aliases = aliasesFromTitle(title);
+        var refId = 'glossary-ref-' + (idx + 1);
+        var found = aliases.some(function(alias){
+          return findAndWrapFirst(alias, targetId, refId);
+        });
+        if(found){
+          var backlink = document.createElement('a');
+          backlink.className = 'glossary-backlink';
+          backlink.href = '#' + refId;
+          backlink.textContent = '↑ 回到正文';
+          termNode.appendChild(document.createTextNode(' '));
+          termNode.appendChild(backlink);
         }
       });
     })();
